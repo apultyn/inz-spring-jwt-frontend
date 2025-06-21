@@ -22,7 +22,10 @@ export default function RegisterPage() {
         setViolations(null);
         setIsRegistering(true);
         try {
-            const response = await api.post("/auth/register", {email, password});
+            const response = await api.post("/auth/register", {
+                email,
+                password,
+            });
             setSuccess(response.data.msg);
         } catch (error) {
             if (axios.isAxiosError<SpringError>(error) && error.response) {
@@ -38,67 +41,73 @@ export default function RegisterPage() {
         } finally {
             setIsRegistering(false);
         }
-
-    }
+    };
     return (
         <>
-          <TopBar />
+            <TopBar />
 
-          <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gray-50 px-4 py-10">
-            <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
-              <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-                Register
-              </h2>
+            <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gray-50 px-4 py-10">
+                <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
+                    <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+                        Register
+                    </h2>
 
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                {success && (
-                  <p className="text-sm font-medium text-green-600">{success}</p>
-                )}
-                {error && (
-                  <p className="text-sm font-medium text-red-600">{error}</p>
-                )}
-                {violations?.map((v) => (
-                  <p key={v} className="text-sm font-medium text-red-600">
-                    {v}
-                  </p>
-                ))}
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                        {success && (
+                            <p className="text-sm font-medium text-green-600">
+                                {success}
+                            </p>
+                        )}
+                        {error && (
+                            <p className="text-sm font-medium text-red-600">
+                                {error}
+                            </p>
+                        )}
+                        {violations?.map((v) => (
+                            <p
+                                key={v}
+                                className="text-sm font-medium text-red-600"
+                            >
+                                {v}
+                            </p>
+                        ))}
 
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
 
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
 
-                <button
-                  type="submit"
-                  disabled={isRegistering}
-                  className="w-full rounded-md bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isRegistering ? "Registering…" : "Register"}
-                </button>
-              </form>
+                        <button
+                            type="submit"
+                            disabled={isRegistering}
+                            className="w-full rounded-md bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {isRegistering ? "Registering…" : "Register"}
+                        </button>
+                    </form>
 
-              <p className="mt-4 text-center text-sm">
-                Already have an account?{" "}
-                <button
-                  onClick={() => navigate("/login")}
-                  className="font-medium text-indigo-600 hover:underline"
-                >
-                  Log&nbsp;in
-                </button>
-              </p>
-            </div>
-          </main>
+                    <p className="mt-4 text-center text-sm">
+                        Already have an account?{" "}
+                        <button
+                            onClick={() => navigate("/login")}
+                            className="font-medium text-indigo-600 hover:underline"
+                        >
+                            Log&nbsp;in
+                        </button>
+                    </p>
+                </div>
+            </main>
         </>
-      );
+    );
 }
