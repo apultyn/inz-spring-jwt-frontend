@@ -22,11 +22,25 @@ export default function BookReviewsPage() {
         fetchBook();
     }, [fetchBook]);
 
-    return <>
-    <TopBar/>
-    {book && (<div>
-        <h2>{book.title} - {book.author}</h2>
-        {book.reviews.map((review) => <ReviewComponent key={review.id} review={review}/>)}
-    </div>)}
-    </>
+    return (
+        <>
+          <TopBar />
+          {book && (
+            <main className="mx-auto max-w-4xl px-4 py-8">
+              <h2 className="mb-6 text-2xl font-bold text-gray-800">
+                {book.title}
+                <span className="ml-1 text-gray-500">— {book.author}</span>
+              </h2>
+
+              <div className="space-y-4">
+                {book.reviews.length ? book.reviews.map((r) => (
+                  <ReviewComponent key={r.id} review={r} />
+                )) : (
+                    <p className="text-gray-500">No reviews found.</p>
+                  )}
+              </div>
+            </main>
+          )}
+        </>
+      );
 }

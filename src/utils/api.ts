@@ -30,6 +30,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        console.log(error);
         const isLoginRequest =
             error.config &&
             error.config.method === "post" &&
@@ -41,11 +42,12 @@ api.interceptors.response.use(
             error.response.status === 401 &&
             !isLoginRequest
         ) {
-            console.warn("Unauthorized, redirecting to login");
+            alert(error.response.data.description);
             Cookies.set("token", "");
             window.location.href = "/login";
         } else if (error.response && error.response.status === 403) {
-            console.warn("Insufficient permissions");
+            alert(error.response.data.description);
+            window.location.href = "/";
         } else {
             console.error("Response error: ", error);
         }

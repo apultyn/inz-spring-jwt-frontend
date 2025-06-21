@@ -11,3 +11,9 @@ export interface Book {
     author: string;
     reviews: Review[];
 }
+
+export interface SpringError {
+    detail: string;
+    description: string | null;
+    violations: [string] | null;
+}
