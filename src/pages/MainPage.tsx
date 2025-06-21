@@ -3,10 +3,15 @@ import api from "../utils/api";
 import BookComponent from "../components/BookComponent";
 import type { Book } from "../utils/interfaces";
 import TopBar from "../components/TopBar";
+import { useNavigate } from "react-router-dom";
+import { decodeToken } from "../utils/token";
 
 export default function MainPage() {
     const [books, setBooks] = useState<Book[]>([]);
     const [searchString, setSearchString] = useState("");
+
+    const navigate = useNavigate();
+    const isAdmin = decodeToken().roles.includes("ADMIN");
 
     useEffect(() => {
         const fetchBooks = async (searchString = "") => {
@@ -50,6 +55,15 @@ export default function MainPage() {
                         Clear
                     </button>
                 </div>
+
+                {isAdmin && (
+                    <button
+                        onClick={() => navigate("/books/new")}
+                        className="mb-6 rounded-md bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-500"
+                    >
+                        + Add new book
+                    </button>
+                )}
 
                 {books.length ? (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -15,5 +15,19 @@ export interface Book {
 export interface SpringError {
     detail: string;
     description: string | null;
-    violations: [string] | null;
+    violations: string[] | null;
+}
+
+export interface ReceivedToken {
+    exp: number;
+    iat: number;
+    sub: string;
+    roles: { name: string }[];
+}
+
+export interface DecodedToken {
+    exp: number;
+    iat: number;
+    sub: string;
+    roles: string[];
 }

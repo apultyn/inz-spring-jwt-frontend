@@ -1,22 +1,16 @@
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import type { DecodedToken, ReceivedToken } from "./interfaces";
 
-export interface DecodedToken {
-    exp: number;
-    iat: number;
-    sub: string;
-}
-
-export function decodeToken() {
+export function decodeToken(): DecodedToken {
     const token = Cookies.get("token");
-    console.log(token);
-    if (token) {
-        const decoded: DecodedToken = jwtDecode(token);
-        return decoded;
+    if (!token) {
+        return { exp: 0, iat: 0, sub: "", roles: [] };
     }
-    return {
-        exp: 0,
-        iat: 0,
-        sub: "",
+    const decoded = jwtDecode<ReceivedToken>(token);
+    const normalized: DecodedToken = {
+        ...decoded,
+        roles: decoded.roles.map((r) => r.name),
     };
+    return normalized;
 }
