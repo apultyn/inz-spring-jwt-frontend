@@ -72,7 +72,11 @@ export default function BookReviewsPage() {
                     <div className="space-y-4">
                         {book.reviews.length ? (
                             book.reviews.map((r) => (
-                                <ReviewComponent key={r.id} review={r} fetchBook={fetchBook} />
+                                <ReviewComponent
+                                    key={r.id}
+                                    reviewId={r.id}
+                                    fetchBook={fetchBook}
+                                />
                             ))
                         ) : (
                             <p className="text-gray-500">No reviews found.</p>
