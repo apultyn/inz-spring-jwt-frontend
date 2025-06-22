@@ -4,10 +4,16 @@ import type { Book } from "../utils/interfaces";
 import api from "../utils/api";
 import ReviewComponent from "../components/ReviewComponent";
 import TopBar from "../components/TopBar";
+import { getIsAdmin } from "../utils/token";
+import DeleteBook from "../components/DeleteBook";
+import NewReview from "../components/NewReview";
 
 export default function BookReviewsPage() {
     const { bookId } = useParams();
     const [book, setBook] = useState<Book | null>(null);
+    const [isDeletingBook, setIsDeletingBook] = useState(false);
+    const [isNewReview, setIsNewReview] = useState(false);
+    const isAdmin = getIsAdmin();
 
     const fetchBook = useCallback(async () => {
         try {
@@ -25,6 +31,7 @@ export default function BookReviewsPage() {
     return (
         <>
             <TopBar />
+
             {book && (
                 <main className="mx-auto max-w-4xl px-4 py-8">
                     <h2 className="mb-6 text-2xl font-bold text-gray-800">
@@ -33,6 +40,31 @@ export default function BookReviewsPage() {
                             — {book.author}
                         </span>
                     </h2>
+
+                    <div className="mb-8 flex flex-wrap gap-3">
+                        <button
+                            onClick={() => setIsNewReview(true)}
+                            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                            + New&nbsp;review
+                        </button>
+
+                        {isAdmin && (
+                            <button
+                                onClick={() => setIsDeletingBook(true)}
+                                className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                            >
+                                Delete&nbsp;book
+                            </button>
+                        )}
+                    </div>
+
+                    {isNewReview && (
+                        <NewReview
+                            bookId={book.id}
+                            setIsNewReview={setIsNewReview}
+                        />
+                    )}
 
                     <div className="space-y-4">
                         {book.reviews.length ? (
@@ -44,6 +76,13 @@ export default function BookReviewsPage() {
                         )}
                     </div>
                 </main>
+            )}
+            {isDeletingBook && book && (
+                <DeleteBook
+                    bookId={book.id}
+                    bookTitle={book.title}
+                    setIsDeletingBook={setIsDeletingBook}
+                />
             )}
         </>
     );

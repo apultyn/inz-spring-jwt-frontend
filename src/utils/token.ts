@@ -14,3 +14,7 @@ export function decodeToken(): DecodedToken {
     };
     return normalized;
 }
+
+export function getIsAdmin() {
+    return decodeToken().roles.includes("ADMIN");
+}

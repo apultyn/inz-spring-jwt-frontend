@@ -45,7 +45,11 @@ api.interceptors.response.use(
             alert(error.response.data.description);
             Cookies.set("token", "");
             window.location.href = "/login";
-        } else if (error.response && error.response.status === 403) {
+        } else if (
+            error.response &&
+            error.response.status === 403 &&
+            error.response.data.description !== "Data integrity violated"
+        ) {
             alert(error.response.data.description);
             window.location.href = "/";
         } else {
