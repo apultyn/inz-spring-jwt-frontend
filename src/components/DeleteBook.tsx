@@ -24,7 +24,7 @@ export default function DeleteBook({
         e.preventDefault();
         setError("");
         if (title !== bookTitle) {
-            setError("Invalid book title");
+            setError("Title missmatch");
             return;
         }
         setIsSubmitting(true);
@@ -32,7 +32,6 @@ export default function DeleteBook({
             await api.delete(`/books/${bookId}`);
             navigate("/");
         } catch (error) {
-            console.error(error);
             if (axios.isAxiosError(error) && error.response) {
                 setError(error.response.data.description);
             }

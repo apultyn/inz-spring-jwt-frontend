@@ -4,7 +4,7 @@ import type { Book } from "../utils/interfaces";
 import api from "../utils/api";
 import ReviewComponent from "../components/ReviewComponent";
 import TopBar from "../components/TopBar";
-import { getIsAdmin } from "../utils/token";
+import { getIsAdmin, getIsUser } from "../utils/token";
 import DeleteBook from "../components/DeleteBook";
 import NewReview from "../components/NewReview";
 
@@ -14,6 +14,7 @@ export default function BookReviewsPage() {
     const [isDeletingBook, setIsDeletingBook] = useState(false);
     const [isNewReview, setIsNewReview] = useState(false);
     const isAdmin = getIsAdmin();
+    const isUser = getIsUser();
 
     const fetchBook = useCallback(async () => {
         try {
@@ -26,13 +27,13 @@ export default function BookReviewsPage() {
 
     useEffect(() => {
         fetchBook();
-    }, [fetchBook]);
+    }, [fetchBook, isNewReview]);
 
     return (
         <>
             <TopBar />
 
-            {book && (
+            {book ? (
                 <main className="mx-auto max-w-4xl px-4 py-8">
                     <h2 className="mb-6 text-2xl font-bold text-gray-800">
                         {book.title}
@@ -42,12 +43,14 @@ export default function BookReviewsPage() {
                     </h2>
 
                     <div className="mb-8 flex flex-wrap gap-3">
-                        <button
-                            onClick={() => setIsNewReview(true)}
-                            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            + New&nbsp;review
-                        </button>
+                        {isUser && (
+                            <button
+                                onClick={() => setIsNewReview(true)}
+                                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            >
+                                + New&nbsp;review
+                            </button>
+                        )}
 
                         {isAdmin && (
                             <button
@@ -69,13 +72,15 @@ export default function BookReviewsPage() {
                     <div className="space-y-4">
                         {book.reviews.length ? (
                             book.reviews.map((r) => (
-                                <ReviewComponent key={r.id} review={r} />
+                                <ReviewComponent key={r.id} review={r} fetchBook={fetchBook} />
                             ))
                         ) : (
                             <p className="text-gray-500">No reviews found.</p>
                         )}
                     </div>
                 </main>
+            ) : (
+                <p className="text-gray-500">Book not found.</p>
             )}
             {isDeletingBook && book && (
                 <DeleteBook

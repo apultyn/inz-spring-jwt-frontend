@@ -18,3 +18,7 @@ export function decodeToken(): DecodedToken {
 export function getIsAdmin() {
     return decodeToken().roles.includes("ADMIN");
 }
+
+export function getIsUser() {
+    return decodeToken().roles.includes("USER");
+}

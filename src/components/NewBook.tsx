@@ -20,7 +20,6 @@ export default function NewBook({ setIsNewBook }: NewBookProps) {
             await api.post("/books/create", { author, title });
             setIsNewBook(false);
         } catch (error) {
-            console.error(error);
             if (axios.isAxiosError(error) && error.response) {
                 setError(error.response.data.description);
             }

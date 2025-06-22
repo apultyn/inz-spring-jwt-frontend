@@ -3,6 +3,7 @@ export interface Review {
     userEmail: string;
     stars: number;
     comment: string;
+    bookId: number;
 }
 
 export interface Book {

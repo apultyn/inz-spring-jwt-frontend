@@ -30,7 +30,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.log(error);
         const isLoginRequest =
             error.config &&
             error.config.method === "post" &&
