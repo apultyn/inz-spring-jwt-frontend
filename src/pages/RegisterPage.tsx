@@ -29,6 +29,9 @@ export default function RegisterPage() {
                 confirmPassword,
             });
             setSuccess(response.data.msg);
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
         } catch (error) {
             if (axios.isAxiosError<SpringError>(error) && error.response) {
                 if (error.response.data.description) {

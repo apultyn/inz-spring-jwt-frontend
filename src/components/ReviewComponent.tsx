@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Review } from "../utils/interfaces";
+import type { Review, SpringError } from "../utils/interfaces";
 import { getIsAdmin } from "../utils/token";
 import DeleteReview from "./DeleteReview";
 import api from "../utils/api";
+import axios from "axios";
 
 interface ReviewComponentProps {
     reviewId: number;
@@ -19,6 +20,9 @@ export default function ReviewComponent({
     const [showConfirm, setShowConfirm] = useState(false);
     const [stars, setStars] = useState(0);
     const [comment, setComment] = useState("");
+
+    const [error, setError] = useState("");
+    const [violations, setViolations] = useState<SpringError["violations"]>();
 
     const isAdmin = getIsAdmin();
 
@@ -47,10 +51,19 @@ export default function ReviewComponent({
         setIsSubmitting(true);
         try {
             setReview({ ...review, stars, comment });
+            await api.put(`/reviews/${reviewId}`, { stars, comment });
             setIsEditing(false);
             fetchBook();
-        } catch (e) {
-            console.error(e);
+        } catch (error) {
+            if (axios.isAxiosError<SpringError>(error) && error.response) {
+                if (error.response.data.violations) {
+                    setViolations(error.response.data.violations);
+                } else if (error.response.data.detail) {
+                    setError(error.response.data.detail);
+                }
+            } else {
+                setError("Something went wrong...");
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -82,6 +95,20 @@ export default function ReviewComponent({
                             handleSave();
                         }}
                     >
+                        {error && (
+                            <p className="text-sm font-medium text-red-600">
+                                {error}
+                            </p>
+                        )}
+
+                        {violations?.map((v) => (
+                            <p
+                                key={v}
+                                className="text-sm font-medium text-red-600"
+                            >
+                                {v}
+                            </p>
+                        ))}
                         <div className="flex gap-1 text-2xl">
                             {[1, 2, 3, 4, 5].map((n) => (
                                 <button
