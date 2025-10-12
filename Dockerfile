@@ -11,7 +11,7 @@ RUN npm run build
 
 FROM nginx:stable-alpine
 
-ARG PORT=3000
+ARG PORT=80
 EXPOSE ${PORT}
 
 COPY --from=build /app/dist /usr/share/nginx/html
