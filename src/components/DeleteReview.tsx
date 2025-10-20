@@ -20,7 +20,7 @@ export default function DeleteReview({
     const handleDelete = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
-        if (email !== review.userEmail) {
+        if (email !== review.user_email) {
             setError("Email mismatch");
             return;
         }
@@ -28,11 +28,11 @@ export default function DeleteReview({
         try {
             await api.delete(`/reviews/${review.id}`);
             fetchBook();
+            setShowConfirm(false);
         } catch (e) {
             console.error(e);
         } finally {
             setIsSubmitting(false);
-            setShowConfirm(false);
         }
     };
     return (
@@ -59,6 +59,7 @@ export default function DeleteReview({
                     />
                     <div className="flex justify-end gap-2">
                         <button
+                            type="button"
                             onClick={() => setShowConfirm(false)}
                             className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
                         >

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../utils/api";
 import axios from "axios";
+import { type BookCreateReq, type SpringError } from "../utils/interfaces";
 
 interface NewBookProps {
     setIsNewBook: (arg0: boolean) => void;
@@ -11,17 +12,31 @@ export default function NewBook({ setIsNewBook }: NewBookProps) {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [violations, setViolations] = useState<string[]>();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setViolations([]);
         setIsSubmitting(true);
         try {
-            await api.post("/books/create", { author, title });
+            const req: BookCreateReq = { author, title };
+            await api.post("/books", req);
             setIsNewBook(false);
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                setError(error.response.data.description);
+            if (
+                axios.isAxiosError<SpringError>(error) &&
+                error.response &&
+                error.status === 400
+            ) {
+                const errorData: SpringError = error.response.data;
+                if (errorData.violations) {
+                    setViolations(errorData.violations);
+                } else {
+                    setError(errorData.detail);
+                }
+            } else {
+                setError("Something went wrong...");
             }
         } finally {
             setIsSubmitting(false);
@@ -41,6 +56,12 @@ export default function NewBook({ setIsNewBook }: NewBookProps) {
                             {error}
                         </p>
                     )}
+
+                    {violations?.map((v) => (
+                        <p key={v} className="text-sm font-medium text-red-600">
+                            {v}
+                        </p>
+                    ))}
 
                     <input
                         type="text"

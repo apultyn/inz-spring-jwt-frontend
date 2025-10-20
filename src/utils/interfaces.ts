@@ -1,9 +1,9 @@
 export interface Review {
     id: number;
-    userEmail: string;
+    user_email: string;
     stars: number;
     comment: string;
-    bookId: number;
+    book_id: number;
 }
 
 export interface Book {
@@ -14,21 +14,61 @@ export interface Book {
 }
 
 export interface SpringError {
+    violations: string[];
     detail: string;
-    description: string | null;
-    violations: string[] | null;
 }
 
-export interface ReceivedToken {
-    exp: number;
-    iat: number;
-    sub: string;
-    roles: { name: string }[];
+export interface User {
+    id: number;
+    email: string;
+    role: string;
 }
 
 export interface DecodedToken {
     exp: number;
     iat: number;
+    role: string;
     sub: string;
-    roles: string[];
+}
+
+export interface LoginRes {
+    token: string;
+    expires_in: number;
+}
+
+export interface RegisterRes {
+    message: string;
+    user: User;
+}
+
+export interface ReviewCreateReq {
+    stars: number;
+    comment: string;
+    bookId: number;
+}
+
+export interface ReviewUpdateReq {
+    stars: number;
+    comment: string;
+}
+
+export interface BookCreateReq {
+    title: string;
+    author: string;
+}
+
+export interface BookUpdateReq {
+    title: string;
+    author: string;
+}
+
+export interface RegisterReq {
+    email: string;
+    password: string;
+    confirm_password: string;
+}
+
+export interface LoginReq {
+    email: string;
+    password: string;
 }

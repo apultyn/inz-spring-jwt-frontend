@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Review, SpringError } from "../utils/interfaces";
+import type { Review, SpringError, ReviewUpdateReq } from "../utils/interfaces";
 import { getIsAdmin } from "../utils/token";
 import DeleteReview from "./DeleteReview";
 import api from "../utils/api";
@@ -22,7 +22,7 @@ export default function ReviewComponent({
     const [comment, setComment] = useState("");
 
     const [error, setError] = useState("");
-    const [violations, setViolations] = useState<SpringError["violations"]>();
+    const [violations, setViolations] = useState<string[]>();
 
     const isAdmin = getIsAdmin();
 
@@ -47,19 +47,27 @@ export default function ReviewComponent({
     }, [fetchReview]);
 
     const handleSave = async () => {
+        setError("");
+        setViolations([]);
         if (!review) return;
         setIsSubmitting(true);
         try {
-            setReview({ ...review, stars, comment });
-            await api.put(`/reviews/${reviewId}`, { stars, comment });
+            const req: ReviewUpdateReq = { stars, comment };
+            await api.patch(`/reviews/${reviewId}`, req);
             setIsEditing(false);
+            setReview({ ...review, stars, comment });
             fetchBook();
         } catch (error) {
-            if (axios.isAxiosError<SpringError>(error) && error.response) {
-                if (error.response.data.violations) {
-                    setViolations(error.response.data.violations);
-                } else if (error.response.data.detail) {
-                    setError(error.response.data.detail);
+            if (
+                axios.isAxiosError<SpringError>(error) &&
+                error.response &&
+                error.status === 400
+            ) {
+                const errorData: SpringError = error.response.data;
+                if (errorData.violations) {
+                    setViolations(errorData.violations);
+                } else {
+                    setError(errorData.detail);
                 }
             } else {
                 setError("Something went wrong...");
@@ -76,7 +84,7 @@ export default function ReviewComponent({
                     <>
                         <header className="mb-2 flex items-center justify-between">
                             <h4 className="break-all font-semibold text-gray-800">
-                                {review.userEmail}
+                                {review.user_email}
                             </h4>
                             <p className="text-sm text-yellow-500">
                                 {"★".repeat(review.stars)}
