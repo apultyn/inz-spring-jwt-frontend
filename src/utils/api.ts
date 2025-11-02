@@ -1,7 +1,15 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_BASE_URL = "http://localhost:8080/api";
+declare global {
+    interface Window {
+        env: {
+            API_BASE_URL: string;
+        };
+    }
+}
+
+const API_BASE_URL = window.env.API_BASE_URL;
 
 const api = axios.create({
     baseURL: API_BASE_URL,
