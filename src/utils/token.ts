@@ -8,7 +8,7 @@ export function decodeToken(): DecodedToken {
         return {
             iat: 0,
             exp: 0,
-            role: "",
+            roles: [],
             sub: "",
         };
     }
@@ -17,9 +17,9 @@ export function decodeToken(): DecodedToken {
 }
 
 export function getIsAdmin(): boolean {
-    return decodeToken().role === "ADMIN";
+    return (decodeToken().roles ?? []).includes("BOOK_ADMIN");
 }
 
 export function getIsUser(): boolean {
-    return decodeToken().role === "USER";
+    return (decodeToken().roles ?? []).includes("BOOK_USER");
 }

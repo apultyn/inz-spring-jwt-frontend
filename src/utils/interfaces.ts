@@ -21,13 +21,13 @@ export interface SpringError {
 export interface User {
     id: number;
     email: string;
-    role: string;
+    roles: string[];
 }
 
 export interface DecodedToken {
     exp: number;
     iat: number;
-    role: string;
+    roles: string[];
     sub: string;
 }
 
