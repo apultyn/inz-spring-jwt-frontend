@@ -32,7 +32,7 @@ export default function RegisterPage() {
                 password,
                 confirm_password: confirmPassword,
             };
-            const response = await api.post<RegisterRes>("/auth/register", req);
+            const response = await api.post<RegisterRes>("/auth/register/", req);
             setSuccess(
                 `User ${response.data.user.email} registered successfully! You can log in now`
             );

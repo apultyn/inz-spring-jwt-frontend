@@ -26,7 +26,7 @@ export default function LoginPage() {
         setViolations([]);
         try {
             const req: LoginReq = { email, password };
-            const response = await api.post<LoginRes>("/auth/login", req);
+            const response = await api.post<LoginRes>("/auth/login/", req);
 
             Cookies.set("token", response.data.token, {
                 secure: true,
